@@ -1,16 +1,31 @@
 .timer {
-    position: relative;
     width: 100px;
     height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin: 10px;
 }
 
-.timer-circle {
-    transition: stroke-dashoffset 1s linear;
-    stroke-width: 4;
+.timer-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg); /* Rotate to start from 12 o'clock */
 }
 
 .timer-circle-bg {
-    stroke-width: 3px;
+    fill: black;
+    stroke: none;
+}
+
+.timer-circle {
+    fill: none;
+    stroke: cyan;
+    stroke-width: 5px;
+    stroke-dasharray: 283;
+    transition: stroke-dashoffset 1s linear;
 }
 
 .timer-text {
@@ -20,4 +35,5 @@
     transform: translate(-50%, -50%);
     color: white;
     font-size: 20px;
+    z-index: 10;
 }
