@@ -5,36 +5,45 @@ import './App.css';
 
 const App = () => {
     const [timers, setTimers] = useState([]);
-    const [maxDuration, setMaxDuration] = useState(0);
     const [isRunning, setIsRunning] = useState(false);
+    let interval;
 
-    // Load state from localStorage
     useEffect(() => {
-        const savedTimers = JSON.parse(localStorage.getItem('timers'));
-        if (savedTimers) {
-            setTimers(savedTimers);
+        if (isRunning) {
+            interval = setInterval(() => {
+                setTimers(timers => timers.map(timer => {
+                    const timeNow = Date.now();
+                    if (timer.startTime <= timeNow) {
+                        const newTimeElapsed = Math.min(timer.timeElapsed + 1, timer.duration);
+                        return { ...timer, timeElapsed: newTimeElapsed };
+                    }
+                    return timer;
+                }));
+            }, 1000);
+        } else {
+            clearInterval(interval);
         }
-    }, []);
 
-    // Save state to localStorage
-    useEffect(() => {
-        localStorage.setItem('timers', JSON.stringify(timers));
-    }, [timers]);
+        return () => clearInterval(interval);
+    }, [isRunning]);
 
     const addTimer = () => {
         const duration = parseInt(prompt("Enter duration in seconds:", "60"), 10);
         if (!isNaN(duration)) {
-            setTimers([...timers, { duration, id: Date.now(), startDelay: 0 }]);
-            setMaxDuration(Math.max(maxDuration, duration));
+            setTimers([...timers, { duration, id: Date.now(), timeElapsed: 0, startTime: 0 }]);
         }
     };
 
     const startTimers = () => {
-        const updatedTimers = timers.map(timer => ({
+        const maxDuration = Math.max(...timers.map(timer => timer.duration));
+        const startTime = Date.now();
+
+        setTimers(timers.map(timer => ({
             ...timer,
-            startDelay: maxDuration - timer.duration
-        }));
-        setTimers(updatedTimers);
+            startTime: startTime + (maxDuration - timer.duration) * 1000,
+            timeElapsed: 0
+        })));
+
         setIsRunning(true);
     };
 
@@ -44,7 +53,6 @@ const App = () => {
 
     const resetTimers = () => {
         setTimers([]);
-        setMaxDuration(0);
         setIsRunning(false);
     };
 
@@ -61,8 +69,7 @@ const App = () => {
                     <Timer
                         key={timer.id}
                         duration={timer.duration}
-                        startDelay={timer.startDelay}
-                        isRunning={isRunning}
+                        timeElapsed={timer.timeElapsed}
                     />
                 ))}
             </div>
