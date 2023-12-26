@@ -48,6 +48,17 @@ const App = () => {
     };
 
     const pauseResumeTimers = () => {
+        if (!isRunning) {
+            // Find the maximum remaining time among all timers
+            const maxRemainingTime = Math.max(...timers.map(timer => timer.duration - timer.timeElapsed));
+            const currentTime = Date.now();
+
+            setTimers(timers.map(timer => {
+                // Calculate the new startTime for each timer
+                const newStartTime = currentTime - (timer.duration - maxRemainingTime) * 1000;
+                return { ...timer, startTime: newStartTime };
+            }));
+        }
         setIsRunning(!isRunning);
     };
 
