@@ -1,0 +1,23 @@
+.timer {
+    position: relative;
+    width: 100px;
+    height: 100px;
+}
+
+.timer-circle {
+    transition: stroke-dashoffset 1s linear;
+    stroke-width: 4;
+}
+
+.timer-circle-bg {
+    stroke-width: 3px;
+}
+
+.timer-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 20px;
+}
