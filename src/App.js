@@ -8,6 +8,30 @@ const App = () => {
     const [isRunning, setIsRunning] = useState(false);
     const intervalRef = useRef(null);
 
+    // Load timers from localStorage on mount
+    useEffect(() => {
+        const savedTimers = localStorage.getItem('timers');
+        if (savedTimers) {
+            const timersData = JSON.parse(savedTimers);
+            if (timersData && timersData.length) {
+                setTimers(timersData);
+                // Check if any timer was running
+                const anyRunning = timersData.some(timer => timer.isRunning);
+                setIsRunning(anyRunning);
+            }
+        }
+    }, []);
+
+    // Save timers to localStorage when they change
+    useEffect(() => {
+        const timersToSave = timers.map(timer => ({
+            ...timer,
+            isRunning: isRunning && timer.timeElapsed < timer.duration
+        }));
+        localStorage.setItem('timers', JSON.stringify(timersToSave));
+    }, [timers, isRunning]);
+
+    // Timer logic
     useEffect(() => {
         if (isRunning) {
             intervalRef.current = setInterval(() => {
