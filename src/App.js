@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Timer from './components/Timer';
 
 import './App.css';
@@ -6,25 +6,25 @@ import './App.css';
 const App = () => {
     const [timers, setTimers] = useState([]);
     const [isRunning, setIsRunning] = useState(false);
-    let interval;
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         if (isRunning) {
-            interval = setInterval(() => {
+            intervalRef.current = setInterval(() => {
+                const currentTime = Date.now();
                 setTimers(timers => timers.map(timer => {
-                    const timeNow = Date.now();
-                    if (timer.startTime <= timeNow) {
-                        const newTimeElapsed = Math.min(timer.timeElapsed + 1, timer.duration);
+                    if (timer.startTime <= currentTime) {
+                        const newTimeElapsed = Math.min(Math.floor((currentTime - timer.startTime) / 1000), timer.duration);
                         return { ...timer, timeElapsed: newTimeElapsed };
                     }
                     return timer;
                 }));
             }, 1000);
         } else {
-            clearInterval(interval);
+            clearInterval(intervalRef.current);
         }
 
-        return () => clearInterval(interval);
+        return () => clearInterval(intervalRef.current);
     }, [isRunning]);
 
     const addTimer = () => {
