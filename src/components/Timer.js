@@ -16,23 +16,28 @@ const Timer = ({ duration, timeElapsed }) => {
     };
 
     return (
-        <div className="timer">
-            <svg className="timer-svg" width="100" height="100">
-                <circle className="timer-circle-bg" cx="50" cy="50" r={radius} fill="black" />
-                <circle
-                    className="timer-circle"
-                    cx="50" cy="50" r={radius}
-                    fill="transparent"
-                    stroke="cyan"
-                    strokeWidth="5"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={strokeDashoffset}
-                    transform="rotate(-90 50 50)"
-                />
-            </svg>
-            <span className="timer-text">
-                {formatTime(timeElapsed)}
-            </span>
+        <div className="timer-block">
+            <div className="preset-time">
+                {formatTime(duration)}
+            </div>
+            <div className="timer">
+                <svg className="timer-svg" width="100" height="100">
+                    <circle className="timer-circle-bg" cx="50" cy="50" r={radius} fill="black" />
+                    <circle
+                        className="timer-circle"
+                        cx="50" cy="50" r={radius}
+                        fill="transparent"
+                        stroke="cyan"
+                        strokeWidth="5"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={strokeDashoffset}
+                        transform="rotate(-90 50 50)"
+                    />
+                </svg>
+                <span className="timer-text">
+                    {formatTime(timeElapsed)}
+                </span>
+            </div>
         </div>
     );
 };
